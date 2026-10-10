@@ -149,8 +149,20 @@ export interface CreativeBrief {
   status: 'draft' | 'open' | 'matched' | 'in_production' | 'completed';
 }
 
+export type MatchDimension =
+  | 'Toolchain Alignment'
+  | 'Specialization & Skills'
+  | 'Verification & Clearance'
+  | 'Content & Format'
+  | 'Budget Feasibility'
+  | 'Deadline & Availability'
+  | 'Toolchain'
+  | 'Budget Alignment'
+  | 'Aesthetic / Style'
+  | 'Turnaround';
+
 export interface MatchScoreFactor {
-  dimension: 'Toolchain' | 'Budget Alignment' | 'Aesthetic / Style' | 'Verification & Clearance' | 'Turnaround';
+  dimension: MatchDimension;
   weight: number;
   score: number;
   rationale: string;
@@ -159,9 +171,13 @@ export interface MatchScoreFactor {
 export interface BriefMatchResult {
   briefId: string;
   creatorId: string;
+  creator?: Creator;
   overallScore: number;
+  isEligible: boolean;
+  disqualificationReason?: string;
   breakdown: MatchScoreFactor[];
-  highlightBadge?: 'Top Tool Match' | 'Budget Friendly' | 'Verified Specialist';
+  highlights?: string[];
+  highlightBadge?: string;
 }
 
 export type EngagementStage = 'shortlisted' | 'invited' | 'in_discussion' | 'in_production' | 'delivered';

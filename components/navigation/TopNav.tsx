@@ -36,14 +36,14 @@ export const TopNav: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-zinc-800 bg-[#09090b]/90 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-40 w-full border-b border-[#233058] bg-[#0b1021]/95 backdrop-blur-xl shadow-card-navy">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-6">
         {/* Left: Brand Wordmark */}
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-10">
           <Wordmark showTagline={false} />
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1" aria-label="Main Navigation">
+          <nav className="hidden md:flex items-center gap-2" aria-label="Main Navigation">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive =
@@ -56,16 +56,19 @@ export const TopNav: React.FC = () => {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    'flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-mono uppercase tracking-wider transition-colors',
+                    'relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-mono uppercase tracking-wider transition-all duration-150',
                     'focus:outline-none focus-visible:ring-2 focus-visible:ring-lime-accent',
                     isActive
-                      ? 'bg-zinc-800 text-white font-medium border border-zinc-700/80 shadow-sm'
-                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60'
+                      ? 'bg-[#182346] text-white font-bold border border-[#2d3e70] shadow-sm'
+                      : 'text-slate-300 hover:text-white hover:bg-[#131b36]'
                   )}
                   aria-current={isActive ? 'page' : undefined}
                 >
-                  <Icon className={cn('w-3.5 h-3.5', isActive ? 'text-lime-accent' : 'text-zinc-500')} />
+                  <Icon className={cn('w-4 h-4', isActive ? 'text-lime-accent' : 'text-slate-400')} />
                   <span>{item.label}</span>
+                  {isActive && (
+                    <span className="absolute bottom-0 left-3 right-3 h-[3px] bg-lime-accent rounded-full animate-in fade-in duration-200" />
+                  )}
                   {item.badge && (
                     <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-zinc-700 text-zinc-300">
                       {item.badge}
@@ -77,12 +80,13 @@ export const TopNav: React.FC = () => {
           </nav>
         </div>
 
-        {/* Right: Quick Action & Mobile Hamburger */}
-        <div className="flex items-center gap-3">
+        {/* Right: Prominent CTA & Mobile Hamburger */}
+        <div className="flex items-center gap-4">
           <Link
             href="/briefs/new"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md text-xs font-mono uppercase tracking-wider bg-lime-accent text-zinc-950 font-bold hover:bg-lime-hover transition-colors shadow-glow-lime focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-mono uppercase tracking-wider bg-lime-accent text-zinc-950 font-black hover:bg-[#b8e600] transition-all duration-150 shadow-glow-lime hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
+            <FilePlus2 className="w-4 h-4" />
             <span>+ Post Brief</span>
           </Link>
 
@@ -90,19 +94,19 @@ export const TopNav: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900 border border-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-lime-accent"
+            className="md:hidden p-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-[#131b36] border border-[#233058] focus:outline-none focus-visible:ring-2 focus-visible:ring-lime-accent"
             aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isMobileMenuOpen}
           >
-            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
       {/* Mobile Menu Drawer */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-b border-zinc-800 bg-[#0c0c0e] px-4 pt-3 pb-6 space-y-2 animate-in slide-in-from-top-2 duration-150">
-          <nav className="flex flex-col gap-1" aria-label="Mobile Navigation">
+        <div className="md:hidden border-b border-[#233058] bg-[#0b1021] px-4 pt-4 pb-6 space-y-3 animate-in slide-in-from-top-2 duration-150">
+          <nav className="flex flex-col gap-1.5" aria-label="Mobile Navigation">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive =
@@ -116,28 +120,29 @@ export const TopNav: React.FC = () => {
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={cn(
-                    'flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-mono uppercase tracking-wider transition-colors',
+                    'flex items-center justify-between px-4 py-3 rounded-xl text-xs font-mono uppercase tracking-wider transition-colors',
                     isActive
-                      ? 'bg-zinc-800 text-white font-medium border border-zinc-700'
-                      : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+                      ? 'bg-[#182346] text-white font-bold border border-[#2d3e70]'
+                      : 'text-slate-300 hover:text-white hover:bg-[#131b36]'
                   )}
                 >
-                  <div className="flex items-center gap-2.5">
-                    <Icon className={cn('w-4 h-4', isActive ? 'text-lime-accent' : 'text-zinc-500')} />
+                  <div className="flex items-center gap-3">
+                    <Icon className={cn('w-4 h-4', isActive ? 'text-lime-accent' : 'text-slate-400')} />
                     <span>{item.label}</span>
                   </div>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-zinc-600" />
+                  <ArrowUpRight className="w-4 h-4 text-slate-500" />
                 </Link>
               );
             })}
           </nav>
 
-          <div className="pt-3 border-t border-zinc-800">
+          <div className="pt-3 border-t border-[#233058]">
             <Link
               href="/briefs/new"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-xs font-mono uppercase tracking-wider bg-lime-accent text-zinc-950 font-bold hover:bg-lime-hover transition-colors"
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-mono uppercase tracking-wider bg-lime-accent text-zinc-950 font-black hover:bg-[#b8e600] transition-colors shadow-glow-lime"
             >
+              <FilePlus2 className="w-4 h-4" />
               <span>+ Post Brief</span>
             </Link>
           </div>
