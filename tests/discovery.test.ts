@@ -95,7 +95,7 @@ assert(
 const sortedRateAsc = sortCreators(mockCreators, 'rate-asc');
 assert(
   'Sort by rate-asc correctly places lowest day rate first',
-  sortedRateAsc[0].dayRateUSD <= sortedRateAsc[1].dayRateUSD &&
+  (sortedRateAsc[0].dayRateUSD || 0) <= (sortedRateAsc[1].dayRateUSD || 0) &&
     sortedRateAsc[0].displayName === 'Nova Vance',
   `First creator is ${sortedRateAsc[0].displayName} with rate $${sortedRateAsc[0].dayRateUSD}`
 );
@@ -104,7 +104,7 @@ assert(
 const sortedRateDesc = sortCreators(mockCreators, 'rate-desc');
 assert(
   'Sort by rate-desc correctly places highest day rate first',
-  sortedRateDesc[0].dayRateUSD >= sortedRateDesc[1].dayRateUSD &&
+  (sortedRateDesc[0].dayRateUSD || 0) >= (sortedRateDesc[1].dayRateUSD || 0) &&
     sortedRateDesc[0].displayName === 'Lucian & Maya',
   `First creator is ${sortedRateDesc[0].displayName} with rate $${sortedRateDesc[0].dayRateUSD}`
 );

@@ -150,56 +150,59 @@ function DiscoverContent() {
     filters.commercialCapabilities.length;
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
-      {/* 1. Page Heading and Marketplace Explanation */}
-      <PageHeader
-        title="Discover AI Filmmakers & Directors"
-        subtitle="The verified marketplace for generative cinema, stylized animation, and commercial AI content. Discover directors with audited generation pipelines, commercial clearance, and prompt architecture."
-        badge={
-          <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono bg-zinc-900 border border-zinc-700/80 text-zinc-300">
-            <span className="w-2 h-2 rounded-full bg-lime-accent animate-pulse" />
-            <span>{mockCreators.length} Verified Directors</span>
-          </span>
-        }
-        actions={
-          <div className="flex items-center gap-2.5">
-            <Link
-              href="/briefs/new"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-mono uppercase tracking-wider bg-lime-accent text-zinc-950 font-bold hover:bg-lime-hover transition-colors shadow-glow-lime focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
-            >
-              <FilePlus2 className="w-3.5 h-3.5" />
-              <span>Post Creative Brief</span>
-            </Link>
+    <div className="space-y-10 animate-in fade-in duration-300">
+      {/* 1. Large Bold Hero Section */}
+      <section className="text-center py-8 sm:py-12 space-y-5 max-w-4xl mx-auto">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest bg-lime-accent/10 border border-lime-accent/30 text-lime-accent font-bold">
+          <span className="w-2 h-2 rounded-full bg-lime-accent animate-pulse" />
+          <span>{mockCreators.length} Verified AI Directors &amp; Animators</span>
+        </div>
 
-            <Link
-              href="/shortlist"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-mono uppercase tracking-wider border border-zinc-800 bg-zinc-900/90 text-zinc-300 hover:text-white hover:border-zinc-700 transition-colors"
-            >
-              <Bookmark className="w-3.5 h-3.5 text-zinc-400" />
-              <span>Shortlist ({shortlistedIds.length})</span>
-            </Link>
-          </div>
-        }
-      />
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
+          Find Your Next <span className="text-lime-accent underline decoration-lime-accent/40 decoration-wavy decoration-2">AI Creative</span>.
+        </h1>
+
+        <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          Curated marketplace connecting forward-thinking brands with top-tier verified AI filmmakers, animators, and generative content directors.
+        </p>
+
+        <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+          <Link
+            href="/briefs/new"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-mono uppercase tracking-wider bg-lime-accent text-zinc-950 font-black hover:bg-[#b8e600] transition-transform hover:scale-105 shadow-glow-lime"
+          >
+            <FilePlus2 className="w-4 h-4" />
+            <span>Post a Creative Brief</span>
+          </Link>
+
+          <Link
+            href="/shortlist"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-mono uppercase tracking-wider border border-[#233058] bg-[#131b36] text-white hover:border-slate-500 transition-colors"
+          >
+            <Bookmark className="w-4 h-4 text-slate-400" />
+            <span>My Shortlist ({shortlistedIds.length})</span>
+          </Link>
+        </div>
+      </section>
 
       {/* 2. Interactive Discovery Search & Filter Console */}
       <section
-        className="p-5 rounded-xl border border-zinc-800 bg-[#121215]/90 space-y-5 shadow-sm"
+        className="p-6 sm:p-7 rounded-2xl border border-[#233058] bg-[#131b36] space-y-6 shadow-card-navy"
         aria-label="Creator Filters and Search"
       >
         {/* Row 1: Search Input & Sort Selector */}
-        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4">
           <div className="flex-1">
             <SearchInput
               value={filters.search}
               onChange={handleSearchChange}
-              placeholder="Search by creator name, tool (e.g. Runway, ComfyUI), skill, or genre..."
+              placeholder="Search directors by name, tool (e.g. Runway, ComfyUI), skill, or genre..."
             />
           </div>
 
           {/* Sort Dropdown */}
-          <div className="flex items-center gap-2 shrink-0">
-            <label htmlFor="sort-select" className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+          <div className="flex items-center gap-2.5 shrink-0">
+            <label htmlFor="sort-select" className="text-xs font-mono uppercase tracking-wider text-slate-400">
               Sort:
             </label>
             <div className="relative">
@@ -207,29 +210,29 @@ function DiscoverContent() {
                 id="sort-select"
                 value={filters.sort}
                 onChange={(e) => handleSortChange(e.target.value as DiscoverySortOption)}
-                className="h-11 px-3 pr-8 rounded-lg border border-zinc-800 bg-zinc-900 text-xs font-mono text-zinc-200 focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-lime-accent appearance-none cursor-pointer"
+                className="h-11 px-3.5 pr-9 rounded-xl border border-[#2d3e70] bg-[#182346] text-xs font-mono text-white focus:outline-none focus:border-lime-accent appearance-none cursor-pointer"
               >
-                <option value="relevance">Relevance & Verified</option>
+                <option value="relevance">Relevance &amp; Verified</option>
                 <option value="portfolio-count">Portfolio Count (High to Low)</option>
                 <option value="rate-asc">Indicative Rate (Low to High)</option>
                 <option value="rate-desc">Indicative Rate (High to Low)</option>
                 <option value="rating-desc">Client Rating (Highest)</option>
               </select>
-              <ChevronDown className="w-3.5 h-3.5 text-zinc-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
 
             {/* Toggle Advanced Filters Button */}
             <button
               type="button"
               onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-              className={`h-11 px-3 rounded-lg border text-xs font-mono uppercase tracking-wider flex items-center gap-1.5 transition-colors ${
+              className={`h-11 px-4 rounded-xl border text-xs font-mono uppercase tracking-wider flex items-center gap-2 transition-colors ${
                 showAdvancedFilters || activeFiltersCount > 0
-                  ? 'bg-zinc-800 text-white border-zinc-700'
-                  : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:text-white'
+                  ? 'bg-[#182346] text-white border-lime-accent'
+                  : 'bg-[#182346] text-slate-300 border-[#2d3e70] hover:text-white'
               }`}
               aria-expanded={showAdvancedFilters}
             >
-              <SlidersHorizontal className="w-3.5 h-3.5" />
+              <SlidersHorizontal className="w-4 h-4 text-lime-accent" />
               <span>Filters</span>
               {activeFiltersCount > 0 && (
                 <span className="w-5 h-5 rounded-full bg-lime-accent text-zinc-950 font-bold text-[10px] flex items-center justify-center">
