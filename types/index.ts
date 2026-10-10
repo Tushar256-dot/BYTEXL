@@ -42,6 +42,12 @@ export type CommercialCapability =
 
 export type AvailabilityStatus = 'immediate' | 'within_2_weeks' | 'booked';
 
+export type VerificationStateScope =
+  | 'identity_verified'
+  | 'evidence_reviewed'
+  | 'creator_reported'
+  | 'verification_pending';
+
 export interface CreatorVerification {
   isIdentityVerified: boolean;
   isCommercialClearanceCertified: boolean;
@@ -52,12 +58,28 @@ export interface CreatorVerification {
   selfReportedTools: AiTool[];
 }
 
+export type WorkflowStageName =
+  | '1. Concept & Reference Development'
+  | '2. Image & Video Generation'
+  | '3. Refinement & Consistency Work'
+  | '4. Editing & Final Delivery';
+
+export interface WorkflowStage {
+  stageNumber: number;
+  stageName: WorkflowStageName;
+  toolsUsed: (AiTool | string)[];
+  methodology: string;
+  evidenceType: 'reviewed_node_graph' | 'generation_logs' | 'creator_reported';
+}
+
 export interface PipelineStep {
   stepNumber: number;
-  phase: 'Concept & Prompting' | 'Generation' | 'Motion Synthesis' | 'Post & Upscaling';
+  phase: 'Concept & Prompting' | 'Generation' | 'Motion Synthesis' | 'Post & Upscaling' | string;
   tool: AiTool | string;
   technique: string;
 }
+
+export type ItemVerificationStatus = 'evidence_reviewed' | 'creator_reported' | 'verification_pending';
 
 export interface PortfolioItem {
   id: string;
@@ -67,11 +89,18 @@ export interface PortfolioItem {
   thumbnailUrl: string;
   videoPreviewUrl?: string;
   aspectRatio: AspectRatio;
+  outputFormat?: string; // e.g. "4K 60fps ProRes 4444"
   durationSeconds?: number;
   description: string;
   primaryModel: AiTool;
+  toolsUsed?: (AiTool | string)[];
+  skillsDemonstrated?: string[];
   pipelineSteps: PipelineStep[];
+  workflowStages?: WorkflowStage[];
   commercialRightsStatus: 'commercial_cleared' | 'editorial_only' | 'experimental';
+  licensingDetails?: string;
+  verificationStatus?: ItemVerificationStatus;
+  verificationEvidence?: string;
   featured: boolean;
   viewCount?: number;
   likesCount?: number;
@@ -85,19 +114,19 @@ export interface Creator {
   bio: string;
   avatarUrl: string;
   coverImageUrl?: string;
-  location: string;
-  timezone: string;
-  availability: AvailabilityStatus;
-  dayRateUSD: number;
-  minimumProjectBudgetUSD: number;
+  location?: string;
+  timezone?: string;
+  availability?: AvailabilityStatus;
+  dayRateUSD?: number;
+  minimumProjectBudgetUSD?: number;
   specialties: CreatorSpecialty[];
   skills: string[];
-  supportedContentTypes: ContentType[];
-  supportedAspectRatios: AspectRatio[];
+  supportedContentTypes?: ContentType[];
+  supportedAspectRatios?: AspectRatio[];
   commercialCapability: CommercialCapability;
   verification: CreatorVerification;
   portfolio: PortfolioItem[];
-  turnaroundDaysAverage: number;
+  turnaroundDaysAverage?: number;
   isShortlisted?: boolean;
 }
 

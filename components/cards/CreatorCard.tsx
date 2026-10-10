@@ -213,12 +213,16 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block">
               Indicative Rate
             </span>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-sm font-bold text-white font-mono">
-                {formatCurrency(creator.dayRateUSD)}
-              </span>
-              <span className="text-[10px] text-zinc-500 font-mono">/day</span>
-            </div>
+            {creator.dayRateUSD ? (
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-sm font-bold text-white font-mono">
+                  {formatCurrency(creator.dayRateUSD)}
+                </span>
+                <span className="text-[10px] text-zinc-500 font-mono">/day</span>
+              </div>
+            ) : (
+              <span className="text-xs text-zinc-400 font-mono">Upon Request</span>
+            )}
           </div>
 
           <div className="flex items-center gap-2">
