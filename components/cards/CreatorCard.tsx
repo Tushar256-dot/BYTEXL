@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Creator } from '@/types';
 import { cn, formatCurrency } from '@/lib/utils';
-import { Bookmark, Clock, ArrowUpRight, Star } from 'lucide-react';
+import { Bookmark, ArrowUpRight, ShieldCheck, Scale, Star, Sparkles } from 'lucide-react';
 import SkillBadge from '@/components/ui/SkillBadge';
 import ToolBadge from '@/components/ui/ToolBadge';
 import VerificationBadge from '@/components/ui/VerificationBadge';
@@ -25,7 +25,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
   onInvite,
   className,
 }) => {
-  const topPortfolio = creator.portfolio[0];
+  const topPortfolio = creator.portfolio && creator.portfolio.length > 0 ? creator.portfolio[0] : null;
 
   return (
     <article
@@ -35,12 +35,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
         className
       )}
     >
-      {/* Header with Visual Preview */}
+      {/* 1. Portfolio Preview Visual */}
       <div className="relative aspect-[16/9] w-full overflow-hidden bg-zinc-950">
         {topPortfolio ? (
           <Image
             src={topPortfolio.thumbnailUrl}
-            alt={`${creator.displayName}'s work: ${topPortfolio.title}`}
+            alt={`${creator.displayName}'s production work: ${topPortfolio.title}`}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover group-hover:scale-105 transition-transform duration-300 opacity-80 group-hover:opacity-95"
@@ -55,7 +55,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
 
         {/* Top Floating Actions: Availability Pill & Shortlist Button */}
         <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider bg-black/70 backdrop-blur-md border border-zinc-800 text-zinc-300">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider bg-black/75 backdrop-blur-md border border-zinc-800 text-zinc-300">
             <span
               className={cn(
                 'w-1.5 h-1.5 rounded-full',
@@ -71,7 +71,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 ? 'Available Now'
                 : creator.availability === 'within_2_weeks'
                 ? 'Available 2w'
-                : 'Booked'}
+                : 'Booked Out'}
             </span>
           </div>
 
@@ -79,11 +79,15 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             <button
               type="button"
               onClick={() => onToggleShortlist(creator.id)}
-              aria-label={isShortlisted ? `Remove ${creator.displayName} from shortlist` : `Add ${creator.displayName} to shortlist`}
+              aria-label={
+                isShortlisted
+                  ? `Remove ${creator.displayName} from shortlist`
+                  : `Add ${creator.displayName} to shortlist`
+              }
               className={cn(
                 'p-2 rounded-full backdrop-blur-md border transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-lime-accent',
                 isShortlisted
-                  ? 'bg-lime-accent text-zinc-950 border-lime-accent'
+                  ? 'bg-lime-accent text-zinc-950 border-lime-accent shadow-glow-lime'
                   : 'bg-black/60 text-zinc-300 border-zinc-700/80 hover:bg-black/90 hover:text-white'
               )}
             >
@@ -92,12 +96,13 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
           )}
         </div>
 
-        {/* Featured Title Overlay at Bottom of Preview */}
+        {/* Featured Case Study Overlay */}
         {topPortfolio && (
           <div className="absolute bottom-2 left-3 right-3 text-left">
-            <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider block">
-              Featured Case Study
-            </span>
+            <div className="flex items-center gap-1.5 text-[10px] font-mono text-zinc-400 uppercase tracking-wider">
+              <Sparkles className="w-2.5 h-2.5 text-lime-accent" />
+              <span>Featured Work ({topPortfolio.aspectRatio})</span>
+            </div>
             <span className="text-xs text-white font-medium line-clamp-1">
               {topPortfolio.title}
             </span>
@@ -105,10 +110,10 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
         )}
       </div>
 
-      {/* Creator Info Body */}
+      {/* 2. Creator Info Body */}
       <div className="p-4 flex flex-col flex-1 justify-between gap-4">
         <div>
-          {/* Avatar & Identification */}
+          {/* Avatar, Name, Primary Specialization & Verification State */}
           <div className="flex items-start gap-3">
             <div className="relative w-11 h-11 rounded-lg overflow-hidden border border-zinc-700 bg-zinc-900 shrink-0">
               <Image
@@ -121,69 +126,99 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             </div>
 
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5 flex-wrap">
                 <Link
                   href={`/creators/${creator.id}`}
                   className="text-sm font-bold text-white hover:text-zinc-200 transition-colors truncate focus:outline-none focus-visible:underline"
                 >
                   {creator.displayName}
                 </Link>
-                {creator.verification.isIdentityVerified && (
+                {creator.verification?.isIdentityVerified ? (
                   <VerificationBadge type="identity" size="sm" />
+                ) : (
+                  <VerificationBadge type="self_reported" size="sm" />
                 )}
               </div>
 
-              <div className="flex items-center gap-2 text-xs text-zinc-400 font-mono mt-0.5">
-                <span>@{creator.handle}</span>
-                <span>•</span>
-                <span>{creator.location}</span>
+              {/* Specialization & Location Subheader */}
+              <div className="flex items-center gap-1.5 text-xs text-violet-400 font-mono mt-0.5 font-medium truncate">
+                <span>{creator.specialties?.[0] || 'AI Filmmaker'}</span>
+                <span className="text-zinc-600">•</span>
+                <span className="text-zinc-400 text-[11px] font-normal">{creator.location}</span>
               </div>
             </div>
           </div>
 
+          {/* Concise Biography */}
           <p className="text-xs text-zinc-400 mt-2.5 line-clamp-2 leading-relaxed">
-            {creator.tagline}
+            {creator.bio || creator.tagline}
           </p>
 
-          {/* Specialties Badges */}
-          <div className="flex flex-wrap gap-1.5 mt-3">
-            {creator.specialties.slice(0, 2).map((specialty) => (
-              <SkillBadge key={specialty} specialty={specialty} size="sm" />
-            ))}
-          </div>
-
-          {/* Verified Toolchains */}
-          <div className="mt-3 pt-3 border-t border-zinc-800/60">
-            <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400 mb-1.5 uppercase tracking-wider">
-              <span>Verified Pipeline</span>
-              {creator.verification.isCommercialClearanceCertified && (
-                <span className="text-emerald-400 flex items-center gap-1">
-                  Commercial Vetted
+          {/* Selected Skills Badges */}
+          {creator.skills && creator.skills.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-3">
+              {creator.skills.slice(0, 2).map((skill) => (
+                <span
+                  key={skill}
+                  className="px-2 py-0.5 rounded text-[10px] font-mono bg-zinc-900 text-zinc-300 border border-zinc-800"
+                >
+                  {skill}
+                </span>
+              ))}
+              {creator.skills.length > 2 && (
+                <span className="px-1.5 py-0.5 text-[9px] font-mono text-zinc-500 rounded bg-zinc-900/60 border border-zinc-800">
+                  +{creator.skills.length - 2}
                 </span>
               )}
             </div>
+          )}
+
+          {/* Verified Toolchains & Commercial Clearance Status */}
+          <div className="mt-3 pt-3 border-t border-zinc-800/60">
+            <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400 mb-1.5 uppercase tracking-wider">
+              <span>Tools / Pipeline</span>
+              {creator.verification?.isCommercialClearanceCertified ? (
+                <span className="text-emerald-400 flex items-center gap-1 text-[10px]">
+                  <ShieldCheck className="w-3 h-3" />
+                  Commercial Cleared
+                </span>
+              ) : (
+                <span className="text-zinc-500 text-[10px]">
+                  {creator.commercialCapability}
+                </span>
+              )}
+            </div>
+
             <div className="flex flex-wrap gap-1.5">
-              {creator.verification.verifiedTools.slice(0, 3).map((tool) => (
+              {creator.verification?.verifiedTools?.slice(0, 3).map((tool) => (
                 <ToolBadge key={tool} tool={tool} isVerified size="sm" />
               ))}
-              {creator.verification.verifiedTools.length > 3 && (
+              {creator.verification?.selfReportedTools?.slice(0, 1).map((tool) => (
+                <ToolBadge key={tool} tool={tool} isVerified={false} size="sm" />
+              ))}
+              {((creator.verification?.verifiedTools?.length || 0) +
+                (creator.verification?.selfReportedTools?.length || 0)) > 4 && (
                 <span className="px-1.5 py-0.5 text-[10px] font-mono text-zinc-500 rounded bg-zinc-900 border border-zinc-800">
-                  +{creator.verification.verifiedTools.length - 3}
+                  +{((creator.verification?.verifiedTools?.length || 0) +
+                    (creator.verification?.selfReportedTools?.length || 0)) - 4}
                 </span>
               )}
             </div>
           </div>
         </div>
 
-        {/* Pricing, Turnaround & Action Footer */}
+        {/* 3. Indicative Rate & Action Controls */}
         <div className="pt-3 border-t border-zinc-800 flex items-center justify-between gap-2">
           <div>
             <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block">
-              Day Rate
+              Indicative Rate
             </span>
-            <span className="text-sm font-bold text-white font-mono">
-              {formatCurrency(creator.dayRateUSD)}
-            </span>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-sm font-bold text-white font-mono">
+                {formatCurrency(creator.dayRateUSD)}
+              </span>
+              <span className="text-[10px] text-zinc-500 font-mono">/day</span>
+            </div>
           </div>
 
           <div className="flex items-center gap-2">

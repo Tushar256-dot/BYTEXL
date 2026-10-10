@@ -6,32 +6,26 @@ import PageHeader from '@/components/ui/PageHeader';
 import CreatorCard from '@/components/cards/CreatorCard';
 import EmptyState from '@/components/ui/EmptyState';
 import ConfirmationDialog from '@/components/ui/ConfirmationDialog';
-import { mockCreators } from '@/lib/mock-data';
+import { mockCreators } from '@/lib/data/creators';
+import { useShortlist } from '@/lib/hooks/useShortlist';
 import { Creator } from '@/types';
-import { Bookmark, FilePlus2, Sparkles } from 'lucide-react';
+import { Bookmark, FilePlus2, Sparkles, ArrowRight } from 'lucide-react';
 
 export default function ShortlistPage() {
-  const [shortlistedIds, setShortlistedIds] = useState<string[]>([
-    'creator-1',
-    'creator-3',
-  ]);
+  const { shortlistedIds, toggleShortlist } = useShortlist(['creator-3']);
   const [invitingCreator, setInvitingCreator] = useState<Creator | null>(null);
 
   const shortlistedCreators = mockCreators.filter((c) =>
     shortlistedIds.includes(c.id)
   );
 
-  const handleToggleShortlist = (creatorId: string) => {
-    setShortlistedIds((prev) => prev.filter((id) => id !== creatorId));
-  };
-
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       <PageHeader
         title="My Shortlisted Directors"
-        subtitle="Bookmarked AI creators and studios ready for brief invitations and preliminary availability checks."
+        subtitle="Bookmarked generative AI directors and visualists saved for upcoming client campaigns and brief invitations."
         breadcrumbs={[
-          { label: 'Discover', href: '/' },
+          { label: 'Discover', href: '/discover' },
           { label: 'My Shortlist' },
         ]}
         actions={
@@ -48,24 +42,39 @@ export default function ShortlistPage() {
       />
 
       {shortlistedCreators.length > 0 ? (
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {shortlistedCreators.map((creator) => (
-            <CreatorCard
-              key={creator.id}
-              creator={creator}
-              isShortlisted={true}
-              onToggleShortlist={handleToggleShortlist}
-              onInvite={(c) => setInvitingCreator(c)}
-            />
-          ))}
-        </section>
+        <div className="space-y-6">
+          <div className="flex items-center justify-between text-xs font-mono text-zinc-400">
+            <span>
+              Showing {shortlistedCreators.length} bookmarked {shortlistedCreators.length === 1 ? 'director' : 'directors'}
+            </span>
+            <Link
+              href="/discover"
+              className="text-lime-accent hover:underline flex items-center gap-1"
+            >
+              <span>Explore more creators</span>
+              <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+
+          <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {shortlistedCreators.map((creator) => (
+              <CreatorCard
+                key={creator.id}
+                creator={creator}
+                isShortlisted={true}
+                onToggleShortlist={toggleShortlist}
+                onInvite={(c) => setInvitingCreator(c)}
+              />
+            ))}
+          </section>
+        </div>
       ) : (
         <EmptyState
           icon={Bookmark}
           title="Your Shortlist is Empty"
-          description="You haven't bookmarked any AI filmmakers yet. Browse the Discover page to save creators matching your desired production style."
+          description="You haven't bookmarked any AI filmmakers yet. Browse the Discover directory to evaluate generative workflows and save directors matching your brief."
           actionLabel="Explore Creators"
-          onAction={() => (window.location.href = '/')}
+          onAction={() => (window.location.href = '/discover')}
         />
       )}
 
@@ -74,10 +83,10 @@ export default function ShortlistPage() {
           isOpen={Boolean(invitingCreator)}
           onClose={() => setInvitingCreator(null)}
           onConfirm={() => {
-            alert(`Invitation sent to ${invitingCreator.displayName}`);
+            alert(`Project brief invitation sent to ${invitingCreator.displayName}`);
             setInvitingCreator(null);
           }}
-          title={`Invite ${invitingCreator.displayName}?`}
+          title={`Invite ${invitingCreator.displayName} to Brief?`}
           description={`Send an invitation to collaborate on an upcoming project brief. Day rate: $${invitingCreator.dayRateUSD}/day.`}
           confirmLabel="Send Invite"
           variant="lime"

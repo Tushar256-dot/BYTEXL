@@ -24,7 +24,7 @@ export interface NavItem {
 }
 
 export const navItems: NavItem[] = [
-  { label: 'Discover', href: '/', icon: Compass },
+  { label: 'Discover', href: '/discover', icon: Compass },
   { label: 'Create Brief', href: '/briefs/new', icon: FilePlus2 },
   { label: 'My Shortlist', href: '/shortlist', icon: Bookmark },
   { label: 'Projects', href: '/projects', icon: Briefcase },
@@ -47,8 +47,8 @@ export const TopNav: React.FC = () => {
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive =
-                item.href === '/'
-                  ? pathname === '/'
+                item.href === '/discover'
+                  ? pathname === '/discover' || pathname === '/'
                   : pathname?.startsWith(item.href);
 
               return (
@@ -106,8 +106,8 @@ export const TopNav: React.FC = () => {
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive =
-                item.href === '/'
-                  ? pathname === '/'
+                item.href === '/discover'
+                  ? pathname === '/discover' || pathname === '/'
                   : pathname?.startsWith(item.href);
 
               return (

@@ -10,7 +10,9 @@ export type AiTool =
   | 'Suno'
   | 'Topaz Video AI'
   | 'DaVinci Resolve'
-  | 'After Effects';
+  | 'After Effects'
+  | 'Cinema 4D'
+  | 'Blender (NeRF/Gaussian Splatting)';
 
 export type CreatorSpecialty =
   | 'Cinematic Film'
@@ -19,7 +21,24 @@ export type CreatorSpecialty =
   | 'Music Visualizer'
   | 'Fashion & Beauty'
   | 'Anime & Stylized 3D'
-  | 'Product CGI';
+  | 'Product CGI'
+  | 'Documentary & Heritage';
+
+export type ContentType =
+  | 'Commercial Spots'
+  | 'Brand Teasers'
+  | 'Music Videos'
+  | 'Social Media (9:16)'
+  | 'Concept Art Animatics'
+  | 'Product CGI'
+  | 'Fashion Editorials';
+
+export type AspectRatio = '16:9' | '9:16' | '1:1' | '2.39:1';
+
+export type CommercialCapability =
+  | 'Full Commercial Clearance'
+  | 'Editorial & Non-Commercial'
+  | 'Experimental / Lab';
 
 export type AvailabilityStatus = 'immediate' | 'within_2_weeks' | 'booked';
 
@@ -28,6 +47,7 @@ export interface CreatorVerification {
   isCommercialClearanceCertified: boolean;
   verifiedDeliveriesCount: number;
   clientRating: number;
+  evidenceNote?: string;
   verifiedTools: AiTool[];
   selfReportedTools: AiTool[];
 }
@@ -46,7 +66,7 @@ export interface PortfolioItem {
   category: CreatorSpecialty;
   thumbnailUrl: string;
   videoPreviewUrl?: string;
-  aspectRatio: '16:9' | '9:16' | '1:1' | '2.39:1';
+  aspectRatio: AspectRatio;
   durationSeconds?: number;
   description: string;
   primaryModel: AiTool;
@@ -71,6 +91,10 @@ export interface Creator {
   dayRateUSD: number;
   minimumProjectBudgetUSD: number;
   specialties: CreatorSpecialty[];
+  skills: string[];
+  supportedContentTypes: ContentType[];
+  supportedAspectRatios: AspectRatio[];
+  commercialCapability: CommercialCapability;
   verification: CreatorVerification;
   portfolio: PortfolioItem[];
   turnaroundDaysAverage: number;
@@ -83,7 +107,7 @@ export interface CreativeBrief {
   brandName: string;
   brandLogoUrl?: string;
   deliverableType: 'commercial_spot' | 'teaser' | 'music_video' | 'social_campaign' | 'concept_art';
-  aspectRatio: '16:9' | '9:16' | '1:1';
+  aspectRatio: AspectRatio;
   targetDurationSeconds: number;
   budgetUSD: { min: number; max: number };
   deadline: string;
@@ -131,3 +155,21 @@ export interface FilterOption {
   value: string;
   count?: number;
 }
+
+export interface DiscoveryFilterState {
+  search: string;
+  specialties: CreatorSpecialty[];
+  skills: string[];
+  tools: AiTool[];
+  contentTypes: ContentType[];
+  aspectRatios: AspectRatio[];
+  commercialCapabilities: CommercialCapability[];
+  sort: DiscoverySortOption;
+}
+
+export type DiscoverySortOption =
+  | 'relevance'
+  | 'portfolio-count'
+  | 'rate-asc'
+  | 'rate-desc'
+  | 'rating-desc';
